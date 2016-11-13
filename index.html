@@ -1,98 +1,126 @@
 <!DOCTYPE html>
 <html>
-<head lang="zh-cn">
+<head lang="en">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=320, target-densityDpi=device-dpi, user-scalable=yes">
-    <title>Maple Particles</title>
-    <link rel="stylesheet" href="style.css"/>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <title>Hejx</title>
     <style>
-        .loading_text{
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate3d(-50%,-50%,0);
-            font-family : "microsoft yahei light";
-            text-align: center;
-            font-size: 48px;
-            z-index: 100;
-            text-shadow: 0 0 10px rgba(64,160,255,0.75);
-        }
-        strong{
-            font-family : "microsoft yahei";
-        }
-        .loading_box{
-            position : absolute;
-            top : 0;
-            width : 100%;
-            height : 100%;
-        }
+    html, body{
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        overflow: hidden;
+    }
+    .main_body{
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        position: relative;
+    }
+    #logo{
+        text-align: center;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding-top: 100px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+    }
+    .my-info{
+        padding-top: 20px;
+        height: 150px;
+        color: #fff;
+    }
+    .my-info h1{
+        font-size: 56px;
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+    .my-info p{
+        margin-top: 10px;
+    }
+    .links{
+        top: 220px;
+        font-size: 14px;
+        text-align: center;
+        color: #fff;
+    }
+    .links a{
+        color: #fff;
+    }
+    canvas{
+        margin-left: -80px;
+        margin-top:  -80px;
+    }
     </style>
 </head>
 <body>
-<div class="main_body">
-    <div class="loading_text">SEE THE <strong>FUTURE</strong></div>
-    <div class="loading_box" id="loading_box">
-        <canvas id="loading"></canvas>
+<div class="main_body" id="main_body">
+    <canvas id="broken-glass"></canvas>
+    <div id="logo">
+        <div class="my-info">
+            <h1 id="name">Hejx</h1>
+            <P>A front-end engineer.</p>
+        </div>
+        <div class="links">
+            <h3 class=""><a href="">Github</a></h3>
+            <h3 class=""><a href="">My Blog</a></h3>
+            <h3 class=""><a href="https://github.com/Alex-fun/vugo">Vugo</a></h3>
+            <h3 class=""><a href="https://github.com/Alex-fun/vue-drag-and-drop-list">Drag&Drop List</a></h3>
+        </div>
     </div>
+    
 </div>
-<script src="particles.js"></script>
-<script>
-    var config = {
-        num       : 250,//数量
-        size      : {
-            minSize: 1,//最小尺寸
-            maxSize: 20//最大尺寸
-        },
-        zone      : {
-            x: [0, 1],
-            y: [1, 1]
-        },
-        speed     : {
-            x : [0, 0],//x轴速度区间
-            y : [-4, -1],//y轴速度区间
-            ax: [0, 0],//x轴加速度区间
-            ay: [-0.01, -0.04]//y轴加速度区间
-        },
-        time      : {
-            fadeIn : 100,//生成时间
-            fadeOut: 4000//消逝时间
-        },
-        atmosphere: [//色彩氛围，在指定颜色区间中随机生成颜色效果真是棒极了！
-            {
-                start:{
-                    r:0,
-                    g:160,
-                    b:191,
-                    a:0.4
-                },
-                end:{
-                    r:64,
-                    g:224,
-                    b:255,
-                    a:0.9
-                }
-            },
-            {
-                start:{
-                    r:0,
-                    g:96,
-                    b:191,
-                    a:0.4
-                },
-                end:{
-                    r:64,
-                    g:160,
-                    b:255,
-                    a:0.9
-                }
-            }
-        ],
-        background:"rgba(0,0,0,0.9)",
-        follow    : false,
-        active    : 100,//鼠标随动程度
-        blur      : true//模糊效果……存在性能问题但不舍得抛弃_(:3」∠)_
+<script type="text/javascript">
+  (function() {
+
+    var isCanvasSupported = function () {
+      var elem = document.createElement('canvas');
+      return !!(elem.getContext && elem.getContext('2d'));
     };
-    var ml = mapleParticles(document.getElementById("loading"), config);
+
+    if( isCanvasSupported() ) {
+
+      var canvas = document.getElementById('broken-glass'),
+          context = canvas.getContext('2d'),
+          width = canvas.width = window.innerWidth + 160,
+          height = canvas.height = window.innerHeight + 160,  
+          numTriangles = 15,
+          rand = function(min, max){
+            return Math.floor( (Math.random() * (max - min + 1) ) + min);
+          };
+          
+      window.drawTriangles = function(){
+        context.clearRect(0, 0, width, height);
+        var hue = rand(0, 360);
+        var increment = 80 / numTriangles;
+        for(var i = 0; i < numTriangles; i++) { 
+            context.beginPath();      
+            context.moveTo(rand(0,width), rand(0,height) );  
+            context.lineTo(rand(0,width), rand(0,height) );
+            context.lineTo(rand(0,width), rand(0,height) );
+            context.globalAlpha = 0.3;
+            context.fillStyle = 'hsl('+Math.round(hue)+', '+rand(15,60)+'%, '+ rand(10, 60) +'%)';      
+            context.closePath();    
+            context.fill();
+
+            hue+=increment;
+            if(hue > 360) hue = 0;
+        }
+        canvas.style.cssText = '-webkit-filter: contrast(115%);';
+      };
+
+      document.getElementById('name').style.color = 'rgba(250, 250, 250, 0.95)';
+      drawTriangles();
+
+      var el = document.getElementById('main_body');
+      el.onclick = function() {
+        drawTriangles();
+      };
+    }
+
+  })();
 </script>
 </body>
 </html>
